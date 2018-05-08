@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 public class Snake implements KeyListener{
-    private Point head;
     private Point bounds;
     private Point apple;
     private int direction = 4;
@@ -15,7 +14,7 @@ public class Snake implements KeyListener{
 
     public Snake(int width, int height)
     {
-        head = new Point((int)width/2, (int)height/2);
+        body.add(new Point((int)width/2, (int)height/2));
         bounds = new Point(width, height);
         apple = new Point(10,10);
 
@@ -68,50 +67,49 @@ public class Snake implements KeyListener{
             {
                 body.get(i).setLocation(body.get(i-1));
             }
-            body.get(0).setLocation(head.getLocation());
         }
 
         switch (direction){
 
            case 0:
-            if(head.getY() > 0)
-                head.setLocation(head.getX(), head.getY() - 1);
+            if(body.get(0).getY() > 0)
+                body.get(0).setLocation(body.get(0).getX(), body.get(0).getY() - 1);
             else
-                head.setLocation(head.getX(), bounds.getY() - 1);
+                body.get(0).setLocation(body.get(0).getX(), bounds.getY() - 1);
             break;
 
            case 1:
-               if(head.getX() < bounds.getX() - 1)
-                   head.setLocation(head.getX() + 1, head.getY());
+               if(body.get(0).getX() < bounds.getX() - 1)
+                   body.get(0).setLocation(body.get(0).getX() + 1, body.get(0).getY());
                else
-                   head.setLocation(0, head.getY());
+                   body.get(0).setLocation(0, body.get(0).getY());
            break;
 
            case 2:
-               if(head.getY() < bounds.getY() - 1)
-                   head.setLocation(head.getX(), head.getY() + 1);
+               if(body.get(0).getY() < bounds.getY() - 1)
+                   body.get(0).setLocation(body.get(0).getX(), body.get(0).getY() + 1);
                else
-                   head.setLocation(head.getX(), 0);
+                   body.get(0).setLocation(body.get(0).getX(), 0);
            break;
 
            case 3:
-               if(head.getX() > 0)
-                   head.setLocation(head.getX() - 1, head.getY());
+               if(body.get(0).getX() > 0)
+                   body.get(0).setLocation(body.get(0).getX() - 1, body.get(0).getY());
                else
-                   head.setLocation(bounds.getX() - 1, head.getY());
+                   body.get(0).setLocation(bounds.getX() - 1, body.get(0).getY());
            break;
         }
 
-        if(head.equals(apple))
+        if(body.get(0).equals(apple))
         {
             Random random = new Random();
             score();
             apple.setLocation(random.nextInt((int)bounds.getX()), random.nextInt((int)bounds.getY()));
         }
 
-        for(Point point: body)
+        for(int i = 1; i < body.size(); i++)
         {
-            if(point.equals(head)) {
+            if(body.get(i).equals(body.get(0))) {
                 System.out.println("ups");
                 end = true;
             }
@@ -125,7 +123,7 @@ public class Snake implements KeyListener{
     }
 
     public int find(int i, int j) {
-        if(head.getX() == i && head.getY() == j)
+        if(body.get(0).getX() == i && body.get(0).getY() == j)
             return 1;
 
         for(Point point: body)

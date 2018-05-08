@@ -3,10 +3,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Main{
-
-    public JFrame frame;
-    public BufferedImage image;
-    public JLabel label;
+    
     public static void main(String[] args)
     {
         JFrame frame = new JFrame();

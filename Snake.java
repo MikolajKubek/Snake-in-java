@@ -11,41 +11,49 @@ public class Snake implements KeyListener{
     private int direction = 4;
     private List<Point> body = new ArrayList<>();
     private boolean end = false;
+    private int wasActionPerformed = 0;
+    private Counter counter;
 
-    public Snake(int width, int height)
+    public Snake(int width, int height, Counter counter)
     {
         body.add(new Point((int)width/2, (int)height/2));
         bounds = new Point(width, height);
         apple = new Point(10,10);
 
+        for(int i = 0; i < 5; i++)
+            body.add(new Point((int)bounds.getX()+1, (int)bounds.getY()+1));
 
+        this.counter = counter;
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode())
-        {
-            case KeyEvent.VK_UP:
-                if(direction != 2)
-                    direction = 0;
-            break;
+        if(wasActionPerformed == 0) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_UP:
+                    if (direction != 2)
+                        direction = 0;
+                    break;
 
-            case KeyEvent.VK_RIGHT:
-                if(direction != 3)
-                    direction = 1;
-            break;
+                case KeyEvent.VK_RIGHT:
+                    if (direction != 3)
+                        direction = 1;
+                    break;
 
-            case KeyEvent.VK_DOWN:
-                if(direction != 0)
-                    direction = 2;
-            break;
+                case KeyEvent.VK_DOWN:
+                    if (direction != 0)
+                        direction = 2;
+                    break;
 
-            case KeyEvent.VK_LEFT:
-                if(direction != 1)
-                    direction = 3;
-            break;
+                case KeyEvent.VK_LEFT:
+                    if (direction != 1)
+                        direction = 3;
+                    break;
 
-            default: break;
+                default:
+                    break;
+            }
+            wasActionPerformed++;
         }
     }
 
@@ -101,11 +109,7 @@ public class Snake implements KeyListener{
         }
 
         if(body.get(0).equals(apple))
-        {
-            Random random = new Random();
             score();
-            apple.setLocation(random.nextInt((int)bounds.getX()), random.nextInt((int)bounds.getY()));
-        }
 
         for(int i = 1; i < body.size(); i++)
         {
@@ -115,11 +119,15 @@ public class Snake implements KeyListener{
             }
         }
 
+        wasActionPerformed = 0;
     }
 
     public void score()
     {
+        Random random = new Random();
         body.add(new Point((int)bounds.getX()+1, (int)bounds.getY()+1));
+        apple.setLocation(random.nextInt((int)bounds.getX()), random.nextInt((int)bounds.getY()));
+        counter.addScore();
     }
 
     public int find(int i, int j) {
@@ -138,5 +146,10 @@ public class Snake implements KeyListener{
 
     public boolean getEnd() {
         return end;
+    }
+
+    public int getDirection()
+    {
+        return direction;
     }
 }

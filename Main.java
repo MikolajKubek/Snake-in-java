@@ -1,54 +1,37 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Main{
-    
+
     public static void main(String[] args)
     {
         JFrame frame = new JFrame();
-        frame.setBounds(50,50, 1000, 1000);
+        frame.setBounds(50,50, 700, 1000);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        frame.setLayout(new BorderLayout());
+        frame.setLayout(null);
 
-        BufferedImage image = new BufferedImage(50,50, BufferedImage.TYPE_INT_ARGB);
-        for(int i = 0; i < 50; i++)
-            for(int j = 0; j < 50; j++)
-                image.setRGB(i,j,Color.black.getRGB());
+        JPanel panel = new JPanel();
+        panel.setSize(500,500);
+        panel.setLocation(frame.getWidth()/2 - 250, frame.getHeight()/3);
+        panel.setVisible(true);
+        frame.add(panel);
 
-        JLabel label = new JLabel();
-        frame.add(label);
-        label.setBounds(0,0,frame.getWidth(), frame.getHeight());
-        label.setIcon(new ImageIcon(image.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH)));
-        label.setVisible(true);
+        Counter counter = new Counter();
+        counter.setSize(200, 100);
+        counter.setLocation(frame.getWidth()/2 - 100, frame.getHeight()/9);
+        frame.add(counter);
 
 
-        Snake snake = new Snake( 50, 50);
-
+        Snake snake = new Snake( 50, 50, counter);
+        Screen screen = new Screen(0, 0, 500, 500, snake);
+        panel.add(screen);
         frame.addKeyListener(snake);
 
 
-        while(!snake.getEnd())
-        {
-            snake.move();
-            for(int i = 0; i < 50; i++)
-                for(int j = 0; j < 50; j++)
-                {
-                    if(snake.find(i,j) == 1) {
-                        image.setRGB(i, j, Color.green.getRGB());
-                    }
-                    else if(snake.find(i, j) == 2)
-                        image.setRGB(i,j,Color.red.getRGB());
-                    else if(snake.find(i, j) == 0)
-                        image.setRGB(i, j, Color.black.getRGB());
-                }
-                label.setIcon(new ImageIcon(image.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH)));
-            try{Thread.sleep(50);}
-            catch(InterruptedException e){}
-        }
+        while(snake.getEnd() != true)
+            screen.run();
 
-        snake = null;
+
 
     }
 }
